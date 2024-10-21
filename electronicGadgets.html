@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electronic Products</title>
+    <style>
+        .navbar {
+            background-color: aquamarine;
+            color: white;
+            padding: 15px 10px;
+            justify-content: space-evenly;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            color: blue;
+            font-size: 24px;
+            padding: 20px 30px;
+            text-decoration: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 40px;
+            width: 70%;
+            margin: 0 auto;
+            gap:40px;
+        }
+
+        .box {
+            background-color: #ccc;
+            border: 2px solid #666;
+            padding: 20px;
+            height: 200px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            gap: 20px;
+        }
+
+        .box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .box img:hover {
+            transform: scale(1.5);
+            /* Zoom effect */
+        }
+
+        /* Modal for full-view */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+        }
+
+        .modal-content .product-details {
+            margin-top: 10px;
+        }
+
+        .modal-content .product-details p {
+            margin: 5px 0;
+        }
+
+        .close {
+            color: red;
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body bgcolor="lightpink">
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="main.html">Home</a>
+        <a href="#">Smartphones</a>
+        <a href="#">Smart Watches</a>
+        <a href="#">Televisions</a>
+        <a href="addToCart.html">Add To Cart</a>
+    </div>
+
+    <!-- Grid of Products -->
+    <div class="grid">
+        <div class="box" data-name="Smartphone 1" data-price="500" data-color="Black" data-company="PhoneBrand"
+            data-rating="4.5">
+            <img src="smartphone-Image-1.jpeg" alt="Smartphone 1" />
+        </div>
+
+        <div class="box" data-name="Smartphone 2" data-price="700" data-color="White" data-company="PhoneBrand"
+            data-rating="4.7">
+            <img src="smartphone-Image-2.jpeg" alt="Smartphone 2" />
+        </div>
+
+        <div class="box" data-name="Smart Watch 1" data-price="200" data-color="Silver" data-company="WatchBrand"
+            data-rating="4.3">
+            <img src="smartwatch-Image-1.jpeg" alt="Smart Watch 1" />
+        </div>
+
+        <div class="box" data-name="Smart Watch 2" data-price="250" data-color="Gold" data-company="WatchBrand"
+            data-rating="4.6">
+            <img src="smartwatch-Image-2.jpeg" alt="Smart Watch 2" />
+        </div>
+
+        <div class="box" data-name="Television 1" data-price="1000" data-color="Black" data-company="TVBrand"
+            data-rating="4.8">
+            <img src="lcd-Image-1.jpeg" alt="Television 1" />
+        </div>
+
+        <div class="box" data-name="Television 2" data-price="1200" data-color="Silver" data-company="TVBrand"
+            data-rating="4.9">
+            <img src="lcd-Image-2.jpeg" alt="Television 2" />
+        </div>
+    </div>
+
+    <!-- Modal for full-view -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modalImage" src="" alt="Product Image" />
+            <div class="product-details">
+                <p id="modalName"></p>
+                <p id="modalPrice"></p>
+                <p id="modalColor"></p>
+                <p id="modalCompany"></p>
+                <p id="modalRating"></p>
+                <button id="addToCartButton">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll(".box");
+        const modal = document.getElementById("productModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalName = document.getElementById("modalName");
+        const modalPrice = document.getElementById("modalPrice");
+        const modalColor = document.getElementById("modalColor");
+        const modalCompany = document.getElementById("modalCompany");
+        const modalRating = document.getElementById("modalRating");
+        const addToCartButton = document.getElementById("addToCartButton");
+        const closeModal = document.querySelector(".close");
+
+        // Function to open modal with product details
+        boxes.forEach((box) => {
+            box.addEventListener("click", function () {
+                const productName = this.getAttribute("data-name");
+                const productPrice = this.getAttribute("data-price");
+                const productColor = this.getAttribute("data-color");
+                const productCompany = this.getAttribute("data-company");
+                const productRating = this.getAttribute("data-rating");
+                const productImg = this.querySelector("img").src;
+
+                modalImage.src = productImg;
+                modalName.textContent =` Name: ${ productName }`;
+                modalPrice.textContent = `Price: ${ productPrice }`;
+                modalColor.textContent = `Color:${ productColor }`;
+                modalCompany.textContent = `Company: ${ productCompany }`;
+                modalRating.textContent =` Rating:${ productRating } `;
+
+                modal.style.display = "flex";
+
+                // Add to Cart functionality
+                addToCartButton.onclick = function () {
+                    alert(`${ productName } added to cart!`);
+                    modal.style.display = "none"; // Close modal after adding to cart
+                };
+            });
+        });
+
+        // Close modal
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
+</body>
+
+</html>
